@@ -8,13 +8,14 @@ namespace Inventory.IntegrationTests;
 internal sealed class SqliteTestDatabase : IAsyncDisposable
 {
     private readonly string _filePath;
-    private readonly string _connectionString;
 
     private SqliteTestDatabase(string filePath)
     {
         _filePath = filePath;
-        _connectionString = $"Data Source={filePath};Pooling=False";
+        ConnectionString = $"Data Source={filePath};Pooling=False";
     }
+
+    public string ConnectionString { get; }
 
     public static async Task<SqliteTestDatabase> CreateAsync()
     {
@@ -27,7 +28,7 @@ internal sealed class SqliteTestDatabase : IAsyncDisposable
     }
 
     public InventoryDbContext CreateContext() =>
-        new(new DbContextOptionsBuilder<InventoryDbContext>().UseSqlite(_connectionString).Options);
+        new(new DbContextOptionsBuilder<InventoryDbContext>().UseSqlite(ConnectionString).Options);
 
     public ValueTask DisposeAsync()
     {
