@@ -3,6 +3,7 @@ using Inventory.Application.Products;
 namespace Inventory.Web.ViewModels;
 
 public sealed record ProductRowViewModel(
+    int Id,
     string Sku,
     string Name,
     long CurrentStock,
@@ -10,6 +11,7 @@ public sealed record ProductRowViewModel(
     IReadOnlyList<StatusBadge> Badges)
 {
     public static ProductRowViewModel From(ProductListItem product) => new(
+        product.Id,
         product.Sku,
         product.Name,
         product.CurrentStock,

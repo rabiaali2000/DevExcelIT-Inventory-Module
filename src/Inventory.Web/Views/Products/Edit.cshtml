@@ -1,0 +1,26 @@
+@model EditProductViewModel
+@{
+    ViewData["Title"] = $"Edit {Model.Sku}";
+}
+
+<h1 class="h3 mb-1">Edit product</h1>
+<p class="text-muted mb-3">
+    Current stock: <strong>@Model.CurrentStock.ToString("N0")</strong>.
+    Stock is never edited here; it changes only through stock movements.
+</p>
+
+<div class="row">
+    <div class="col-lg-7">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="Version" />
+            <partial name="_ProductFields" model="Model" />
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <a asp-action="Index" class="btn btn-link">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

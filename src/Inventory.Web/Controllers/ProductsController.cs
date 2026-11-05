@@ -1,5 +1,6 @@
 using Inventory.Application.Abstractions;
 using Inventory.Application.Products;
+using Inventory.Domain.Common;
 using Inventory.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,5 +33,43 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
 
         TempData[StatusMessages.Success] = $"Product “{form.Name.Trim()}” created.";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        var product = await queries.FindAsync(id, cancellationToken);
+        return product is null ? NotFound() : View(EditProductViewModel.From(product));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit([FromRoute] int id, EditProductViewModel form, CancellationToken cancellationToken)
+    {
+        if (ModelState.IsValid)
+        {
+            var updated = await products.UpdateAsync(form.ToUpdateCommand(id), cancellationToken);
+            if (updated.IsSuccess)
+            {
+                TempData[StatusMessages.Success] = $"Changes to “{form.Name.Trim()}” saved.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (updated.Error.Type == ErrorType.NotFound)
+                return NotFound();
+
+            ModelState.AddError(updated.Error);
+        }
+
+        return await RedisplayEditAsync(id, form, cancellationToken);
+    }
+
+    private async Task<IActionResult> RedisplayEditAsync(int id, EditProductViewModel form, CancellationToken cancellationToken)
+    {
+        var product = await queries.FindAsync(id, cancellationToken);
+        if (product is null)
+            return NotFound();
+
+        form.ShowCurrentState(product);
+        return View(form);
     }
 }

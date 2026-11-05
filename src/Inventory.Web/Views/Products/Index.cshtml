@@ -44,6 +44,7 @@ else
                 <th scope="col" class="text-end">Current stock</th>
                 <th scope="col" class="text-end">Reorder level</th>
                 <th scope="col">Status</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
             </tr>
         </thead>
         <tbody>
@@ -59,6 +60,9 @@ else
                         {
                             <span class="badge @badge.CssClass">@badge.Text</span>
                         }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@product.Id">Edit<span class="visually-hidden"> @product.Sku</span></a>
                     </td>
                 </tr>
             }
