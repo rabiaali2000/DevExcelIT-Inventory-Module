@@ -51,7 +51,7 @@ else
             @foreach (var product in Model.Products)
             {
                 <tr>
-                    <td><code>@product.Sku</code></td>
+                    <td><a asp-action="Details" asp-route-id="@product.Id"><code>@product.Sku</code></a></td>
                     <td>@product.Name</td>
                     <td class="text-end">@product.CurrentStock.ToString("N0")</td>
                     <td class="text-end">@product.ReorderLevel.ToString("N0")</td>

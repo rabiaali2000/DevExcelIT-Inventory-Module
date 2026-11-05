@@ -43,7 +43,7 @@ internal sealed class ProductQueries(InventoryDbContext db) : IProductQueries
             .Where(m => m.ProductId == productId)
             .OrderBy(m => m.CreatedUtc)
             .ThenBy(m => m.Id)
-            .Select(m => new MovementItem(m.Id, m.Type, m.Quantity, m.Note, m.CreatedUtc))
+            .Select(m => new MovementItem(m.Id, m.Type, m.Quantity, m.Note, m.CreatedUtc, m.SignedQuantity))
             .ToListAsync(cancellationToken);
 
     // User input is matched literally: %, _ and the escape character itself lose their LIKE meaning.

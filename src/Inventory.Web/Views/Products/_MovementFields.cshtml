@@ -1,0 +1,21 @@
+@model RecordMovementViewModel
+
+<div class="row g-3">
+    <div class="col-sm-4 form-field">
+        <label asp-for="Type" class="form-label"></label>
+        <select asp-for="Type" asp-items="RecordMovementViewModel.TypeOptions()" class="form-select">
+            <option value="">Choose…</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+    <div class="col-sm-3 form-field">
+        <label asp-for="Quantity" class="form-label"></label>
+        <input asp-for="Quantity" class="form-control" min="1" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <div class="col-sm-5 form-field">
+        <label asp-for="Note" class="form-label"></label>
+        <input asp-for="Note" class="form-control" placeholder="e.g. PO-1042 or Order #5531" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>

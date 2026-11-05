@@ -1,0 +1,87 @@
+@model ProductDetailViewModel
+@{
+    ViewData["Title"] = Model.Sku;
+}
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h1 class="h3 mb-1">@Model.Name</h1>
+        <code>@Model.Sku</code>
+        @foreach (var badge in Model.Badges)
+        {
+            <span class="badge @badge.CssClass ms-1">@badge.Text</span>
+        }
+    </div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+</div>
+
+<dl class="row mb-4">
+    <dt class="col-sm-3">Current stock</dt>
+    <dd class="col-sm-9 fs-4 fw-semibold">@Model.CurrentStock.ToString("N0")</dd>
+    <dt class="col-sm-3">Reorder level</dt>
+    <dd class="col-sm-9">@Model.ReorderLevel.ToString("N0")</dd>
+    <dt class="col-sm-3">Description</dt>
+    <dd class="col-sm-9">@Model.DescriptionText</dd>
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">@Model.CreatedText</dd>
+</dl>
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h2 class="h5 card-title">Record a stock movement</h2>
+        @if (Model.IsActive)
+        {
+            <form asp-action="RecordMovement" asp-route-id="@Model.Id" method="post">
+                <partial name="_MovementFields" model="Model.Form" />
+                <button type="submit" class="btn btn-primary mt-3">Record movement</button>
+            </form>
+        }
+        else
+        {
+            <p class="mb-0">
+                This product is inactive and can't record movements.
+                <a asp-action="Edit" asp-route-id="@Model.Id">Reactivate it on the edit page.</a>
+            </p>
+        }
+    </div>
+</div>
+
+<h2 class="h5">Movement history</h2>
+@if (!Model.HasMovements)
+{
+    <p class="text-muted">No stock movements yet.</p>
+}
+else
+{
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th scope="col">When</th>
+                <th scope="col">Type</th>
+                <th scope="col" class="text-end">Quantity</th>
+                <th scope="col" class="text-end">Stock after</th>
+                <th scope="col">Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movement in Model.Movements)
+            {
+                <tr>
+                    <td>@movement.When</td>
+                    <td><span class="badge @movement.TypeCssClass">@movement.TypeText</span></td>
+                    <td class="text-end">@movement.QuantityText</td>
+                    <td class="text-end">@movement.BalanceAfter.ToString("N0")</td>
+                    <td>@movement.Note</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index">Back to products</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

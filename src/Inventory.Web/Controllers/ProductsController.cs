@@ -6,13 +6,40 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Web.Controllers;
 
-public sealed class ProductsController(IProductQueries queries, ProductService products) : Controller
+public sealed class ProductsController(
+    IProductQueries queries, ProductService products, StockMovementService movements) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(string? search, bool showInactive, CancellationToken cancellationToken)
     {
         var items = await queries.SearchAsync(search, showInactive, cancellationToken);
         return View(ProductListViewModel.Create(search, showInactive, items));
+    }
+
+    [HttpGet]
+    public Task<IActionResult> Details([FromRoute] int id, CancellationToken cancellationToken) =>
+        DetailsViewAsync(id, new RecordMovementViewModel(), cancellationToken);
+
+    [HttpPost("Products/{id:int}/Movements")]
+    public async Task<IActionResult> RecordMovement(
+        [FromRoute] int id, RecordMovementViewModel form, CancellationToken cancellationToken)
+    {
+        if (ModelState.IsValid)
+        {
+            var recorded = await movements.RecordAsync(form.ToCommand(id), cancellationToken);
+            if (recorded.IsSuccess)
+            {
+                TempData[StatusMessages.Success] = form.SuccessMessage();
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            if (recorded.Error.Type == ErrorType.NotFound)
+                return NotFound();
+
+            ModelState.AddError(recorded.Error);
+        }
+
+        return await DetailsViewAsync(id, form, cancellationToken);
     }
 
     [HttpGet]
@@ -32,7 +59,7 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
         }
 
         TempData[StatusMessages.Success] = $"Product “{form.Name.Trim()}” created.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Details), new { id = created.Value });
     }
 
     [HttpGet]
@@ -51,7 +78,7 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
             if (updated.IsSuccess)
             {
                 TempData[StatusMessages.Success] = $"Changes to “{form.Name.Trim()}” saved.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
 
             if (updated.Error.Type == ErrorType.NotFound)
@@ -71,6 +98,17 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
     [HttpPost]
     public async Task<IActionResult> Activate([FromRoute] int id, CancellationToken cancellationToken) =>
         AfterStatusChange(id, await products.ActivateAsync(id, cancellationToken), "Product reactivated.");
+
+    // Used by the GET and by a failed movement POST, so both show the same, freshly read page.
+    private async Task<IActionResult> DetailsViewAsync(int id, RecordMovementViewModel form, CancellationToken cancellationToken)
+    {
+        var product = await queries.FindAsync(id, cancellationToken);
+        if (product is null)
+            return NotFound();
+
+        var history = await queries.GetMovementsAsync(id, cancellationToken);
+        return View(nameof(Details), ProductDetailViewModel.Create(product, history, form));
+    }
 
     private async Task<IActionResult> RedisplayEditAsync(int id, EditProductViewModel form, CancellationToken cancellationToken)
     {
