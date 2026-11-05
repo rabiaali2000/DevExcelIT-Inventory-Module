@@ -1,0 +1,64 @@
+@model ProductListViewModel
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1 class="h3 mb-3">Products</h1>
+
+<form method="get" class="row g-2 align-items-center mb-3" role="search">
+    <div class="col-12 col-md-6">
+        <label for="search" class="visually-hidden">Search by SKU or name</label>
+        <input id="search" name="search" type="search" value="@Model.Search" class="form-control"
+               placeholder="Search by SKU or name" />
+    </div>
+    <div class="col-auto">
+        <div class="form-check">
+            <input id="showInactive" name="showInactive" type="checkbox" value="true" class="form-check-input"
+                   checked="@Model.ShowInactive" />
+            <label for="showInactive" class="form-check-label">Show inactive</label>
+        </div>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Search</button>
+        @if (Model.IsFiltered)
+        {
+            <a asp-action="Index" class="btn btn-link">Clear</a>
+        }
+    </div>
+</form>
+
+@if (!Model.HasProducts)
+{
+    <p class="text-muted">@Model.EmptyMessage</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col">SKU</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="text-end">Current stock</th>
+                <th scope="col" class="text-end">Reorder level</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td><code>@product.Sku</code></td>
+                    <td>@product.Name</td>
+                    <td class="text-end">@product.CurrentStock.ToString("N0")</td>
+                    <td class="text-end">@product.ReorderLevel.ToString("N0")</td>
+                    <td>
+                        @foreach (var badge in product.Badges)
+                        {
+                            <span class="badge @badge.CssClass">@badge.Text</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
