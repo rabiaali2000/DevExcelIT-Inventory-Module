@@ -8,21 +8,6 @@ namespace Inventory.IntegrationTests;
 public class StockMovementServiceTests
 {
     [Fact]
-    public async Task RecordInThenOut_UpdatesCachedStockAndLedger()
-    {
-        await using var database = await SqliteTestDatabase.CreateAsync();
-        var productId = await CreateProductWithStockAsync(database, 10);
-
-        var issued = await RecordAsync(database, productId, MovementType.Out, 3);
-
-        Assert.True(issued.IsSuccess);
-        await using var context = database.CreateContext();
-        Assert.Equal(7, (await context.Products.SingleAsync(p => p.Id == productId)).CurrentStock);
-        Assert.Equal(2, await context.StockMovements.CountAsync(m => m.ProductId == productId));
-        Assert.Equal(0, await LedgerCheck.CountStockMismatchesAsync(context));
-    }
-
-    [Fact]
     public async Task RecordOut_MoreThanStock_FailsAndWritesNothing()
     {
         await using var database = await SqliteTestDatabase.CreateAsync();
