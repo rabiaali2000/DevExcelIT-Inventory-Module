@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# SQLite database created by the app at runtime (never committed)
+*.db
+*.db-shm
+*.db-wal
