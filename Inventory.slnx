@@ -6,6 +6,7 @@
     <Project Path="src/Inventory.Web/Inventory.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Inventory.IntegrationTests/Inventory.IntegrationTests.csproj" />
     <Project Path="tests/Inventory.UnitTests/Inventory.UnitTests.csproj" />
   </Folder>
 </Solution>
