@@ -30,6 +30,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_StatusMessages" />
             @RenderBody()
         </main>
     </div>
@@ -42,6 +43,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (HttpMethods.IsPost(Context.Request.Method))
+    {
+        <script>
+            // This page answers a form POST, e.g. one with validation errors. Turn its history entry into a
+            // plain GET of the same address, so reloading shows a fresh page instead of re-posting the form.
+            history.replaceState(null, "", location.href);
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

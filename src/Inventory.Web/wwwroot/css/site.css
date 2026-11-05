@@ -29,3 +29,25 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Hide the form's error summary until it actually has errors. */
+.validation-summary-valid {
+  display: none;
+}
+
+/* Fields that failed validation (on the server or in the browser) get Bootstrap's "invalid" border. */
+.input-validation-error {
+  border-color: var(--bs-form-invalid-border-color);
+}
+
+/* Required and optional markers come from the same [Required] rules as validation: the input of a
+   required field carries data-val-required, so its label gets a red asterisk; any other field is optional. */
+.form-field:has([data-val-required]) > .form-label::after {
+  content: " *";
+  color: var(--bs-danger);
+}
+
+.form-field:not(:has([data-val-required])) > .form-label::after {
+  content: " (optional)";
+  color: var(--bs-secondary-color);
+}

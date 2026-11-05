@@ -1,11 +1,12 @@
 using Inventory.Application;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Add services to the container. Every POST must carry a valid anti-forgery token.
+builder.Services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 

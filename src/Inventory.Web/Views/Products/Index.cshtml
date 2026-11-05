@@ -3,7 +3,10 @@
     ViewData["Title"] = "Products";
 }
 
-<h1 class="h3 mb-3">Products</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Products</h1>
+    <a asp-action="Create" class="btn btn-success">New product</a>
+</div>
 
 <form method="get" class="row g-2 align-items-center mb-3" role="search">
     <div class="col-12 col-md-6">

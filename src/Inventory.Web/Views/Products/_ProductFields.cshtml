@@ -1,0 +1,29 @@
+@model ProductFormViewModel
+
+<p class="form-text mt-0">Fields marked <span class="text-danger">*</span> are required.</p>
+
+<div class="mb-3 form-field">
+    <label asp-for="Sku" class="form-label"></label>
+    <input asp-for="Sku" class="form-control" autocomplete="off" />
+    <div class="form-text">Must be unique. Letters are stored in upper case.</div>
+    <span asp-validation-for="Sku" class="text-danger"></span>
+</div>
+
+<div class="mb-3 form-field">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3 form-field">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+
+<div class="mb-3 form-field">
+    <label asp-for="ReorderLevel" class="form-label"></label>
+    <input asp-for="ReorderLevel" class="form-control" min="0" />
+    <div class="form-text">The product is flagged "Low stock" when its stock is at or below this level.</div>
+    <span asp-validation-for="ReorderLevel" class="text-danger"></span>
+</div>
