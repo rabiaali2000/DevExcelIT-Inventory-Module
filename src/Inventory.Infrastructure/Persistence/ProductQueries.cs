@@ -22,10 +22,11 @@ internal sealed class ProductQueries(InventoryDbContext db) : IProductQueries
                 EF.Functions.Like(p.Sku, pattern, LikeEscape) || EF.Functions.Like(p.Name, pattern, LikeEscape));
         }
 
-        // IsLowStock is evaluated in C# from the loaded product, so the rule exists only in the domain.
+        // IsLowStock and IsOutOfStock are evaluated in C# from the loaded product, so the rules exist only in the domain.
         return await products
             .OrderBy(p => p.Name)
-            .Select(p => new ProductListItem(p.Id, p.Sku, p.Name, p.CurrentStock, p.ReorderLevel, p.IsActive, p.IsLowStock))
+            .Select(p => new ProductListItem(
+                p.Id, p.Sku, p.Name, p.CurrentStock, p.ReorderLevel, p.IsActive, p.IsLowStock, p.IsOutOfStock))
             .ToListAsync(cancellationToken);
     }
 
@@ -34,7 +35,7 @@ internal sealed class ProductQueries(InventoryDbContext db) : IProductQueries
             .Where(p => p.Id == id)
             .Select(p => new ProductDetails(
                 p.Id, p.Sku, p.Name, p.Description, p.ReorderLevel, p.IsActive,
-                p.CurrentStock, p.IsLowStock, p.CreatedUtc, p.Version))
+                p.CurrentStock, p.IsLowStock, p.IsOutOfStock, p.CreatedUtc, p.Version))
             .SingleOrDefaultAsync(cancellationToken);
 
     public async Task<IReadOnlyList<MovementItem>> GetMovementsAsync(int productId, CancellationToken cancellationToken) =>

@@ -187,4 +187,14 @@ public class ProductTests
 
         Assert.Equal(expected, product.IsLowStock);
     }
+
+    [Theory]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    public void IsOutOfStock_IsTrueOnlyWhenNothingIsLeft(int stock, bool expected)
+    {
+        var product = TestProducts.WithStock(stock);
+
+        Assert.Equal(expected, product.IsOutOfStock);
+    }
 }

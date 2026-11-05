@@ -7,4 +7,5 @@ public sealed record ProductListItem(
     long CurrentStock,
     int ReorderLevel,
     bool IsActive,
-    bool IsLowStock);
+    bool IsLowStock,
+    bool IsOutOfStock);

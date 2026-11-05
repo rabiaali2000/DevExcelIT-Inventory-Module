@@ -27,6 +27,8 @@ public sealed class Product
 
     public bool IsLowStock => CurrentStock <= ReorderLevel;
 
+    public bool IsOutOfStock => CurrentStock == 0;
+
     public static Result<Product> Create(string sku, string name, string? description, int reorderLevel, DateTime utcNow)
     {
         var product = new Product(utcNow);

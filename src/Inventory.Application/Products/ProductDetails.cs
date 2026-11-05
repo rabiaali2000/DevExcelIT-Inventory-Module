@@ -9,5 +9,6 @@ public sealed record ProductDetails(
     bool IsActive,
     long CurrentStock,
     bool IsLowStock,
+    bool IsOutOfStock,
     DateTime CreatedUtc,
     Guid Version);
