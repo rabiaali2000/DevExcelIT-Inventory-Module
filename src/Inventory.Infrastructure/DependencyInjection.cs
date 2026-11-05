@@ -1,3 +1,4 @@
+using Inventory.Application.Abstractions;
 using Inventory.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,9 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Inventory")
             ?? throw new InvalidOperationException("Connection string 'Inventory' is missing from configuration.");
 
-        return services.AddDbContext<InventoryDbContext>(options => options.UseSqlite(connectionString));
+        return services
+            .AddDbContext<InventoryDbContext>(options => options.UseSqlite(connectionString))
+            .AddScoped<IProductRepository, ProductRepository>()
+            .AddScoped<IProductQueries, ProductQueries>();
     }
 }
