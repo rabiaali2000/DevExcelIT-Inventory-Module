@@ -11,6 +11,7 @@ public sealed class EditProductViewModel : ProductFormViewModel
     // Shown on the page, never taken from the post.
     [BindNever] public int Id { get; set; }
     [BindNever] public long CurrentStock { get; set; }
+    [BindNever] public bool IsActive { get; set; }
 
     public static EditProductViewModel From(ProductDetails product)
     {
@@ -31,6 +32,7 @@ public sealed class EditProductViewModel : ProductFormViewModel
     {
         Id = product.Id;
         CurrentStock = product.CurrentStock;
+        IsActive = product.IsActive;
     }
 
     // Call only after ModelState.IsValid, when [Required] guarantees ReorderLevel has a value.

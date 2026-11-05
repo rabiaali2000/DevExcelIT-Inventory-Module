@@ -63,6 +63,15 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
         return await RedisplayEditAsync(id, form, cancellationToken);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Deactivate([FromRoute] int id, CancellationToken cancellationToken) =>
+        AfterStatusChange(id, await products.DeactivateAsync(id, cancellationToken),
+            "Product deactivated. It's hidden from the list (tick “Show inactive” to see it) and its history is kept.");
+
+    [HttpPost]
+    public async Task<IActionResult> Activate([FromRoute] int id, CancellationToken cancellationToken) =>
+        AfterStatusChange(id, await products.ActivateAsync(id, cancellationToken), "Product reactivated.");
+
     private async Task<IActionResult> RedisplayEditAsync(int id, EditProductViewModel form, CancellationToken cancellationToken)
     {
         var product = await queries.FindAsync(id, cancellationToken);
@@ -71,5 +80,17 @@ public sealed class ProductsController(IProductQueries queries, ProductService p
 
         form.ShowCurrentState(product);
         return View(form);
+    }
+
+    private IActionResult AfterStatusChange(int id, Result result, string successMessage)
+    {
+        if (result.IsSuccess)
+            TempData[StatusMessages.Success] = successMessage;
+        else if (result.Error.Type == ErrorType.NotFound)
+            return NotFound();
+        else
+            TempData[StatusMessages.Error] = result.Error.Message;
+
+        return RedirectToAction(nameof(Edit), new { id });
     }
 }

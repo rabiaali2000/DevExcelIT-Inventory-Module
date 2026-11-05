@@ -21,6 +21,27 @@
     </div>
 </div>
 
+<hr class="my-4" />
+
+<h2 class="h5">Status</h2>
+@if (Model.IsActive)
+{
+    <p>
+        Active. Deactivating hides the product from the list and blocks new stock movements.
+        Nothing is deleted: its history stays, and you can reactivate it at any time.
+    </p>
+    <form asp-action="Deactivate" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="btn btn-outline-danger">Deactivate product</button>
+    </form>
+}
+else
+{
+    <p>Inactive. The product is hidden from the list and can't record stock movements.</p>
+    <form asp-action="Activate" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="btn btn-outline-success">Reactivate product</button>
+    </form>
+}
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
