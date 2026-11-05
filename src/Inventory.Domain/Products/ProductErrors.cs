@@ -5,22 +5,25 @@ namespace Inventory.Domain.Products;
 public static class ProductErrors
 {
     public static readonly Error SkuRequired =
-        new("Product.SkuRequired", "SKU is required.");
+        new("Product.SkuRequired", "SKU is required.", Target: nameof(Product.Sku));
 
     public static readonly Error SkuTooLong =
-        new("Product.SkuTooLong", $"SKU cannot be longer than {ProductRules.SkuMaxLength} characters.");
+        new("Product.SkuTooLong", $"SKU cannot be longer than {ProductRules.SkuMaxLength} characters.",
+            Target: nameof(Product.Sku));
 
     public static readonly Error NameRequired =
-        new("Product.NameRequired", "Name is required.");
+        new("Product.NameRequired", "Name is required.", Target: nameof(Product.Name));
 
     public static readonly Error NameTooLong =
-        new("Product.NameTooLong", $"Name cannot be longer than {ProductRules.NameMaxLength} characters.");
+        new("Product.NameTooLong", $"Name cannot be longer than {ProductRules.NameMaxLength} characters.",
+            Target: nameof(Product.Name));
 
     public static readonly Error DescriptionTooLong =
-        new("Product.DescriptionTooLong", $"Description cannot be longer than {ProductRules.DescriptionMaxLength} characters.");
+        new("Product.DescriptionTooLong", $"Description cannot be longer than {ProductRules.DescriptionMaxLength} characters.",
+            Target: nameof(Product.Description));
 
     public static readonly Error ReorderLevelNegative =
-        new("Product.ReorderLevelNegative", "Reorder level cannot be negative.");
+        new("Product.ReorderLevelNegative", "Reorder level cannot be negative.", Target: nameof(Product.ReorderLevel));
 
     public static readonly Error Inactive =
         new("Product.Inactive", "This product is inactive. Reactivate it to record movements.", ErrorType.Conflict);
@@ -31,20 +34,23 @@ public static class ProductErrors
             ErrorType.Conflict);
 
     public static readonly Error InvalidMovementType =
-        new("StockMovement.InvalidType", "Movement type must be In or Out.");
+        new("StockMovement.InvalidType", "Movement type must be In or Out.", Target: nameof(StockMovement.Type));
 
     public static readonly Error QuantityOutOfRange =
         new("StockMovement.QuantityOutOfRange",
-            FormattableString.Invariant($"Quantity must be between 1 and {ProductRules.MaxMovementQuantity:N0}."));
+            FormattableString.Invariant($"Quantity must be between 1 and {ProductRules.MaxMovementQuantity:N0}."),
+            Target: nameof(StockMovement.Quantity));
 
     public static readonly Error NoteTooLong =
-        new("StockMovement.NoteTooLong", $"Note cannot be longer than {ProductRules.NoteMaxLength} characters.");
+        new("StockMovement.NoteTooLong", $"Note cannot be longer than {ProductRules.NoteMaxLength} characters.",
+            Target: nameof(StockMovement.Note));
 
     public static Error InsufficientStock(int requested, long available) =>
-        new("Product.InsufficientStock", $"Cannot issue {requested}. Only {available} available.", ErrorType.Conflict);
+        new("Product.InsufficientStock", $"Cannot issue {requested}. Only {available} available.",
+            ErrorType.Conflict, nameof(StockMovement.Quantity));
 
     public static Error DuplicateSku(string sku) =>
-        new("Product.DuplicateSku", $"SKU '{sku}' already exists.", ErrorType.Conflict);
+        new("Product.DuplicateSku", $"SKU '{sku}' already exists.", ErrorType.Conflict, nameof(Product.Sku));
 
     public static Error NotFound(int id) =>
         new("Product.NotFound", $"Product {id} was not found.", ErrorType.NotFound);
