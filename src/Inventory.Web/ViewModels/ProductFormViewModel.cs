@@ -4,8 +4,6 @@ using Inventory.Domain.Products;
 
 namespace Inventory.Web.ViewModels;
 
-// What the product form posts. The attributes give field-by-field feedback on the server (and in the
-// browser as an extra); the domain checks the same rules again, so nothing can get past them.
 public class ProductFormViewModel
 {
     [Display(Name = "SKU")]

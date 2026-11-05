@@ -5,10 +5,8 @@ namespace Inventory.Web.ViewModels;
 
 public sealed class EditProductViewModel : ProductFormViewModel
 {
-    // The version the user saw when the form was opened; saving with an outdated one is reported as a conflict.
     public Guid Version { get; set; }
 
-    // Shown on the page, never taken from the post.
     [BindNever] public int Id { get; set; }
     [BindNever] public long CurrentStock { get; set; }
     [BindNever] public bool IsActive { get; set; }
@@ -27,7 +25,6 @@ public sealed class EditProductViewModel : ProductFormViewModel
         return form;
     }
 
-    // Refreshes the read-only part of the page; the user's typed values are left as they are.
     public void ShowCurrentState(ProductDetails product)
     {
         Id = product.Id;

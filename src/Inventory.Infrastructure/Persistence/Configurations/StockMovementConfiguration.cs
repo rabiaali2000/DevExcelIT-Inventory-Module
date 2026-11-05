@@ -13,7 +13,6 @@ internal sealed class StockMovementConfiguration : IEntityTypeConfiguration<Stoc
             table.HasCheckConstraint("CK_StockMovements_Quantity_Positive", "Quantity > 0");
             table.HasCheckConstraint("CK_StockMovements_Type", "Type IN ('In', 'Out')");
 
-            // Created by the InitialCreate migration; declared so EF generates trigger-safe SQL.
             table.HasTrigger("TR_StockMovements_NoUpdate");
             table.HasTrigger("TR_StockMovements_NoDelete");
         });

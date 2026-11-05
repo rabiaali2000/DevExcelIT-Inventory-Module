@@ -18,8 +18,6 @@ public sealed class Product
     public bool IsActive { get; private set; }
     public DateTime CreatedUtc { get; private set; }
 
-    // Cached sum(In) - sum(Out) of this product's movements. It changes only through RecordMovement;
-    // persistence applies the same change with a guarded, atomic UPDATE.
     public long CurrentStock { get; private set; }
 
     // Optimistic-concurrency token for product edits. Stock movements deliberately leave it unchanged.

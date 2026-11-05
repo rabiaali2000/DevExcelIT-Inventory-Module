@@ -22,7 +22,6 @@ internal sealed class ProductQueries(InventoryDbContext db) : IProductQueries
                 EF.Functions.Like(p.Sku, pattern, LikeEscape) || EF.Functions.Like(p.Name, pattern, LikeEscape));
         }
 
-        // IsLowStock and IsOutOfStock are evaluated in C# from the loaded product, so the rules exist only in the domain.
         return await products
             .OrderBy(p => p.Name)
             .Select(p => new ProductListItem(

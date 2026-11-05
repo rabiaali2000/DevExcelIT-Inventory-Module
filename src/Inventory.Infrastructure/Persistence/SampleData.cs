@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Inventory.Infrastructure.Persistence;
 
-// Demo data for a first run. It goes through the same services as the screens,
-// so every rule applies and the cached stock is correct by construction.
 internal static class SampleData
 {
     private sealed record SampleProduct(

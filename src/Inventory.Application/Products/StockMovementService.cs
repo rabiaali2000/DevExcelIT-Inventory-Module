@@ -26,7 +26,6 @@ public sealed class StockMovementService(IProductRepository products, TimeProvid
                 return Result.Success();
 
             // The guard rejected it: stock or status changed after the snapshot was read.
-            // Read again so the domain decides with fresh numbers, e.g. "Only 2 available".
         }
 
         return Result.Failure(ProductErrors.ConcurrencyConflict);
